@@ -1,0 +1,32 @@
+services:
+  service-discovery:
+    build:
+      context: service-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - meowlope-net
+
+  api-gateway:
+    build:
+      context: api-gateway
+    ports:
+      - "8765:8765"
+    networks:
+      - meowlope-net
+    depends_on:
+      - user-service
+
+  user-service:
+    build:
+      context: user-service
+    ports:
+      - "8081:8081"
+    networks:
+      - meowlope-net
+    depends_on:
+      - service-discovery
+
+networks:
+  meowlope-net:
+    driver: bridge
