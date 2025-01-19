@@ -95,7 +95,7 @@ services:
     networks:
       - meowlope-net
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d meowlope" ]
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d meowlopedb" ]
       interval: 5s
       timeout: 5s
       retries: 5
