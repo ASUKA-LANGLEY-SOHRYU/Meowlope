@@ -5,11 +5,17 @@ plugins {
 }
 
 group = "com.prosvirnin"
-version = "0.0.1"
+version = "1.0"
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
     }
 }
 
@@ -20,14 +26,24 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    implementation("org.springframework.security:spring-security-crypto:6.4.2")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
+    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
@@ -44,3 +60,4 @@ tasks.withType<Test> {
 tasks.bootJar {
     archiveFileName = "app.jar"
 }
+

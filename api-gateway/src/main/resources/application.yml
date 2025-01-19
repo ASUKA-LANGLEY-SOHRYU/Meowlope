@@ -3,6 +3,13 @@ spring:
     name: apigateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: GET, POST, PUT, DELETE, OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
       discovery:
         locator:
           lower-case-service-id: true
@@ -12,6 +19,11 @@ spring:
           uri: lb://userservice
           predicates:
             - Path=/tests/**
+        - id: authservice_route
+          uri: lb://authservice
+          predicates:
+            - Path=/api/v1/auth/**
+
 server:
   port: 8765
 eureka:
