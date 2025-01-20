@@ -28,7 +28,8 @@ public class DefaultAuthService implements AuthService {
 
     @Override
     public TokenPair register(RegistrationRequest registrationRequest) {
-        if (authUserRepository.findByUsername(registrationRequest.getUsername()).isPresent())
+        if (authUserRepository.findByUsername(registrationRequest.getUsername()).isPresent() ||
+            authUserRepository.findByEmail(registrationRequest.getEmail()).isPresent())
             throw new UserAlreadyExistsException(registrationRequest.getUsername());
         AuthUser user = mapper.map(registrationRequest);
         user.setPassword(passwordService.hashPassword(registrationRequest.getPassword()));
