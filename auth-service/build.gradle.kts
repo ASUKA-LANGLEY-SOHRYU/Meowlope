@@ -34,6 +34,9 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
@@ -43,8 +46,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 dependencyManagement {

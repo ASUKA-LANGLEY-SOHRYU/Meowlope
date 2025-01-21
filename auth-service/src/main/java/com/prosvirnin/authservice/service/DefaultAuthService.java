@@ -11,7 +11,9 @@ import com.prosvirnin.authservice.model.domain.user.AuthUser;
 import com.prosvirnin.authservice.model.domain.user.Role;
 import com.prosvirnin.authservice.model.dto.LoginRequest;
 import com.prosvirnin.authservice.model.dto.RegistrationRequest;
+import com.prosvirnin.authservice.model.dto.UserInfo;
 import com.prosvirnin.authservice.repository.AuthUserRepository;
+import com.prosvirnin.authservice.service.pubsub.Publisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +24,22 @@ import java.util.Set;
 public class DefaultAuthService implements AuthService {
 
     private final AuthUserRepository authUserRepository;
-    private final Mapper<RegistrationRequest, AuthUser> mapper;
+    private final Mapper<RegistrationRequest, AuthUser> registrationRequestAuthUserMapper;
+    private final Mapper<AuthUser, UserInfo> authUserUserInfoMapper;
+    private final Publisher<UserInfo> userInfoPublisher;
     private final PasswordService passwordService;
     private final JWTService jwtService;
 
     @Override
     public TokenPair register(RegistrationRequest registrationRequest) {
         if (authUserRepository.findByUsername(registrationRequest.getUsername()).isPresent() ||
-            authUserRepository.findByEmail(registrationRequest.getEmail()).isPresent())
+                authUserRepository.findByEmail(registrationRequest.getEmail()).isPresent())
             throw new UserAlreadyExistsException(registrationRequest.getUsername());
-        AuthUser user = mapper.map(registrationRequest);
+        AuthUser user = registrationRequestAuthUserMapper.map(registrationRequest);
         user.setPassword(passwordService.hashPassword(registrationRequest.getPassword()));
         user.setRoles(Set.of(Role.USER));
         authUserRepository.save(user);
-        //TODO: оповещение через брокера на другой сервис.
+        userInfoPublisher.publish(authUserUserInfoMapper.map(user));
         return jwtService.generateTokenPair(user);
     }
 

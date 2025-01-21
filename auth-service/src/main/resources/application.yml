@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: localhost
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    port: 5672
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5435/meowlopedb}
     username: ${DB_USER:root}
@@ -12,6 +17,11 @@ spring:
   application:
     name: authservice
 service:
+  rabbitmq:
+    routing-key:
+      user-info: userInfoRoutingKey
+    exchange:
+      user-info: userInfoExchange
   jwt:
     secret: ${JWT_SECRET_KEY:secretkey123}
     refresh:

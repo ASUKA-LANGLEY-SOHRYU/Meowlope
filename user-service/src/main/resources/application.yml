@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: localhost
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    port: 5672
   application:
     name: userservice
 server:
@@ -14,3 +19,9 @@ management:
     web:
       exposure:
         include: health
+service:
+  rabbitmq:
+    routing-key:
+      user-info: userInfoRoutingKey
+    exchange:
+      user-info: userInfoExchange
